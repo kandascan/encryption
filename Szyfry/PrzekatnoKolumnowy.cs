@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Szyfry
 {
-    class PrzekatnoKolumnowy
+    public class PrzekatnoKolumnowy
     {
+
     }
 }
