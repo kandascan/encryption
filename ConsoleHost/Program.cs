@@ -26,9 +26,9 @@ namespace ConsoleHost
             }
             Console.WriteLine();
             Console.WriteLine(linia);
-            for (int i = 0; i < kolumny; i++)
+            for (int i = 0; i < wiersze; i++)
             {
-                for (int j = 0; j < wiersze; j++)
+                for (int j = 0; j < kolumny; j++)
                 {
                     Console.Write("{0} ",tablica[i,j]);
                 }
@@ -60,7 +60,7 @@ namespace ConsoleHost
                 {
                     if (kolumna < 0)
                     {
-                        indexKolumny = wiersze - dodatkowaZmienna;
+                        indexKolumny = klucz.Length - dodatkowaZmienna;
                         dodatkowaZmienna++;
                     }
                     
@@ -76,11 +76,11 @@ namespace ConsoleHost
 
         static char[,] UtworzTabliceZTekstu(string tekst, int liczbaKolumn, int liczbaWierszy)
         {
-            var tablica = new char[liczbaKolumn, liczbaWierszy];
+            var tablica = new char[liczbaWierszy, liczbaKolumn];
             var licznikPetli = 0;
-            for (int i = 0; i < liczbaKolumn; i++)
+            for (int i = 0; i < liczbaWierszy; i++)
             {
-                for (int j = 0; j < liczbaWierszy; j++)
+                for (int j = 0; j < liczbaKolumn; j++)
                 {
                     if (licznikPetli >= tekst.Length)
                     {
@@ -102,7 +102,7 @@ namespace ConsoleHost
 
             if (tekst.Length % klucz.Length == 0)
             {
-                liczbaWierszy = tekst.Length % klucz.Length;
+                liczbaWierszy = tekst.Length / klucz.Length;
             }
             else
             {
