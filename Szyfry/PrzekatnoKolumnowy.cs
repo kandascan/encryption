@@ -116,6 +116,87 @@ namespace Szyfry
 
             return zaszyfrowanyTekst;
         }
+
+        public static string Reverse(string s)
+        {
+            char[] charArray = s.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
+        }
+
+        private static char[,] WypelnijTabliceDeszyfrujaca(char[,] tablica, string klucz, string tekst, int liczbaWierszy)
+        {
+            List<Key> key = new List<Key>();
+            for (int i = 0; i < klucz.Length; i++)
+            {
+                key.Add(new Key { OryginalnyIndex = i, Znak = klucz[i] });
+            }
+
+            var sortowaneKlucze = key.OrderByDescending(x => x.Znak).ToArray();
+            string odworoconyTekst = Reverse(tekst);
+            var kolumnaDoZczytania = 0;
+            var kolumnaPomocnicza = 0;
+            var indexKolumnyPoczatkowej = 0;
+            var dodatkowaZmienna = 0;
+            var licznikTekstu = 0;
+            var licznikKolumnowy = 0;
+            var dodajDolicznikaKolumnowego = 0;
+            
+
+            foreach (var keySort in sortowaneKlucze)
+            {
+                kolumnaDoZczytania = keySort.OryginalnyIndex - klucz.Length;
+                indexKolumnyPoczatkowej = kolumnaDoZczytania;
+                //kolumnaDoZczytania += 1;
+                while (kolumnaDoZczytania < 0)
+                {
+                    kolumnaDoZczytania++;
+                    kolumnaPomocnicza++;
+                    indexKolumnyPoczatkowej = kolumnaPomocnicza - 1;
+                    dodatkowaZmienna = indexKolumnyPoczatkowej;
+                }
+                for (int i = liczbaWierszy-1; i > 0; i--)
+                {
+                    for (int j = 0; j < klucz.Length; j++)
+                    {
+                        if (dodatkowaZmienna >= klucz.Length)
+                        {
+                            indexKolumnyPoczatkowej = licznikKolumnowy + dodajDolicznikaKolumnowego;
+                            dodajDolicznikaKolumnowego++;
+                        }
+                        if (j == indexKolumnyPoczatkowej)
+                        {
+                            tablica[i, j] = odworoconyTekst[licznikTekstu];
+                            licznikTekstu++;
+                        }
+                    }
+                    indexKolumnyPoczatkowej++;
+                    dodatkowaZmienna++;
+                }
+                dodatkowaZmienna = 0;
+                indexKolumnyPoczatkowej = 0;
+            }
+
+
+            return tablica;
+        }
+
+        private static char[,] UtworzTabliceDeszyfrujaca(string klucz, int liczbaWierszy)
+        {
+            var tablica = new char[liczbaWierszy, klucz.Length];
+            return tablica;
+        }
+
+        public static string Odszyfruj(string tekst, string klucz)
+        {
+            var liczbaKolumn = klucz.Length;
+            var liczbaWierszy = ObliczLiczbeWierszy(tekst, klucz);
+            var tablica = UtworzTabliceDeszyfrujaca(klucz, liczbaWierszy);
+            var wypelnionaTablica = WypelnijTabliceDeszyfrujaca(tablica, klucz, tekst, liczbaWierszy);
+
+
+            return "";
+        }
     }
 
     class Key

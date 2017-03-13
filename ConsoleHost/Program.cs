@@ -11,6 +11,8 @@ namespace ConsoleHost
     
     class Program
     {
+
+
         static void Main(string[] args)
         {
             var tekst = "BRYLANTY_SĄ_W_MOJEJ_SKRYTCE_W_BANKU";
@@ -21,6 +23,8 @@ namespace ConsoleHost
             Console.WriteLine();
             Console.WriteLine(tekst);
             Console.WriteLine(zaszyfrowany);
+
+            var oryginalnyTekst = PrzekatnoKolumnowy.Odszyfruj(zaszyfrowany, klucz);
 
             Console.ReadLine();
         }
