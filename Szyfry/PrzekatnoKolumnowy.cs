@@ -124,6 +124,26 @@ namespace Szyfry
             return new string(charArray);
         }
 
+        private static string UtworzTekstZTablicy(char[,] tablica, int liczbaWierszy, string klucz)
+        {
+            var tekst = string.Empty;
+
+            for (int i = 0; i < liczbaWierszy; i++)
+            {
+                for (int j = 0; j < klucz.Length; j++)
+                {
+                    char znak = tablica[i, j];
+                    if (znak == 'X')
+                    {
+                        break;
+                    }
+                    tekst += znak;
+                }
+            }
+            
+            return tekst;
+        }
+
         private static char[,] WypelnijTabliceDeszyfrujaca(char[,] tablica, string klucz, string tekst, int liczbaWierszy)
         {
             List<Key> key = new List<Key>();
@@ -132,51 +152,38 @@ namespace Szyfry
                 key.Add(new Key { OryginalnyIndex = i, Znak = klucz[i] });
             }
 
-            var sortowaneKlucze = key.OrderByDescending(x => x.Znak).ToArray();
+            var sortowaneKlucze = key.OrderByDescending(x => x.Znak).ThenByDescending(x => x.OryginalnyIndex).ToArray();
             string odworoconyTekst = Reverse(tekst);
-            var kolumnaDoZczytania = 0;
-            var kolumnaPomocnicza = 0;
-            var indexKolumnyPoczatkowej = 0;
-            var dodatkowaZmienna = 0;
-            var licznikTekstu = 0;
-            var licznikKolumnowy = 0;
-            var dodajDolicznikaKolumnowego = 0;
-            
-
+            int indexTekstu = odworoconyTekst.Length;
             foreach (var keySort in sortowaneKlucze)
             {
-                kolumnaDoZczytania = keySort.OryginalnyIndex - klucz.Length;
-                indexKolumnyPoczatkowej = kolumnaDoZczytania;
-                //kolumnaDoZczytania += 1;
-                while (kolumnaDoZczytania < 0)
+                int indexPoczatkowy = keySort.OryginalnyIndex+1 - klucz.Length;
+
+                if (indexPoczatkowy < 0)
                 {
-                    kolumnaDoZczytania++;
-                    kolumnaPomocnicza++;
-                    indexKolumnyPoczatkowej = kolumnaPomocnicza - 1;
-                    dodatkowaZmienna = indexKolumnyPoczatkowej;
+                    indexPoczatkowy = klucz.Length + indexPoczatkowy;
                 }
-                for (int i = liczbaWierszy-1; i > 0; i--)
+
+                for (int i = liczbaWierszy-1; i >= 0; i--)
                 {
                     for (int j = 0; j < klucz.Length; j++)
                     {
-                        if (dodatkowaZmienna >= klucz.Length)
+                        if (j == indexPoczatkowy)
                         {
-                            indexKolumnyPoczatkowej = licznikKolumnowy + dodajDolicznikaKolumnowego;
-                            dodajDolicznikaKolumnowego++;
-                        }
-                        if (j == indexKolumnyPoczatkowej)
-                        {
-                            tablica[i, j] = odworoconyTekst[licznikTekstu];
-                            licznikTekstu++;
+                            char znak = tekst[indexTekstu-1];
+                            tablica[i, j] = znak;
+                            indexTekstu--;
+                            indexPoczatkowy++;
+                            if (indexPoczatkowy >= klucz.Length)
+                            {
+                                indexPoczatkowy = 0;
+                            }
+                            break;
                         }
                     }
-                    indexKolumnyPoczatkowej++;
-                    dodatkowaZmienna++;
                 }
-                dodatkowaZmienna = 0;
-                indexKolumnyPoczatkowej = 0;
             }
-
+            DrukujTablice(tablica,klucz,liczbaWierszy);
 
             return tablica;
         }
@@ -193,9 +200,7 @@ namespace Szyfry
             var liczbaWierszy = ObliczLiczbeWierszy(tekst, klucz);
             var tablica = UtworzTabliceDeszyfrujaca(klucz, liczbaWierszy);
             var wypelnionaTablica = WypelnijTabliceDeszyfrujaca(tablica, klucz, tekst, liczbaWierszy);
-
-
-            return "";
+            return UtworzTekstZTablicy(wypelnionaTablica, liczbaWierszy, klucz);
         }
     }
 
