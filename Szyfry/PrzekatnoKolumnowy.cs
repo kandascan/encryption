@@ -38,33 +38,30 @@ namespace Szyfry
                 key.Add(new Key { OryginalnyIndex = i, Znak = klucz[i] });
             }
 
-            var sortowaneKlucze = key.OrderBy(x => x.Znak).ToArray();
-
+            var sortowaneKlucze = key.OrderBy(x => x.Znak).ThenBy(x => x.OryginalnyIndex).ToArray();
             var zaszyfrowanyTekst = "";
-
-            var kolumna = 0;
-            var indexKolumny = 0;
-            var iteratorKolumnowy = 1;
 
             foreach (var keySort in sortowaneKlucze)
             {
-                kolumna = keySort.OryginalnyIndex;
-                indexKolumny = kolumna;
+                var kolumna = keySort.OryginalnyIndex;
                 for (int i = 0; i < wiersze; i++)
                 {
-                    if (kolumna < 0)
+                    for (int j = 0; j < klucz.Length; j++)
                     {
-                        indexKolumny = klucz.Length - iteratorKolumnowy;
-                        iteratorKolumnowy++;
+                        if (j == kolumna)
+                        {
+                            char znak = tablica[i, j];
+                            zaszyfrowanyTekst += znak;
+                            kolumna--;
+                            if (kolumna < 0)
+                            {
+                                kolumna = klucz.Length - 1;
+                            }
+                            break;
+                        }
                     }
-
-                    zaszyfrowanyTekst += tablica[i, indexKolumny];
-                    indexKolumny--;
-                    kolumna--;
                 }
-                iteratorKolumnowy = 1;
             }
-
             return zaszyfrowanyTekst;
         }
 
@@ -92,18 +89,14 @@ namespace Szyfry
 
         private static int ObliczLiczbeWierszy(string tekst, string klucz)
         {
-            var liczbaWierszy = 0;
+            float wynik = tekst.Length/klucz.Length;
 
-            if (tekst.Length % klucz.Length == 0)
+            if (tekst.Length % klucz.Length != 0)
             {
-                liczbaWierszy = tekst.Length / klucz.Length;
-            }
-            else
-            {
-                liczbaWierszy = tekst.Length % klucz.Length + 1;
+               wynik = wynik + 1;
             }
 
-            return liczbaWierszy;
+            return (int)wynik;
         }
 
         public static string Szyfruj(string tekst, string klucz)
@@ -115,13 +108,6 @@ namespace Szyfry
             var zaszyfrowanyTekst = SzyfrujTekst(tablica, klucz, liczbaWierszy);
 
             return zaszyfrowanyTekst;
-        }
-
-        public static string Reverse(string s)
-        {
-            char[] charArray = s.ToCharArray();
-            Array.Reverse(charArray);
-            return new string(charArray);
         }
 
         private static string UtworzTekstZTablicy(char[,] tablica, int liczbaWierszy, string klucz)
@@ -140,7 +126,6 @@ namespace Szyfry
                     tekst += znak;
                 }
             }
-            
             return tekst;
         }
 
@@ -153,15 +138,18 @@ namespace Szyfry
             }
 
             var sortowaneKlucze = key.OrderByDescending(x => x.Znak).ThenByDescending(x => x.OryginalnyIndex).ToArray();
-            string odworoconyTekst = Reverse(tekst);
-            int indexTekstu = odworoconyTekst.Length;
+            int indexTekstu = tekst.Length;
             foreach (var keySort in sortowaneKlucze)
             {
-                int indexPoczatkowy = keySort.OryginalnyIndex+1 - klucz.Length;
+                int indexPoczatkowy = keySort.OryginalnyIndex;
 
-                if (indexPoczatkowy < 0)
+                for (int i = 1; i < liczbaWierszy; i++)
                 {
-                    indexPoczatkowy = klucz.Length + indexPoczatkowy;
+                    indexPoczatkowy--;
+                    if (indexPoczatkowy < 0)
+                    {
+                        indexPoczatkowy = klucz.Length-1;
+                    }
                 }
 
                 for (int i = liczbaWierszy-1; i >= 0; i--)
@@ -184,7 +172,6 @@ namespace Szyfry
                 }
             }
             DrukujTablice(tablica,klucz,liczbaWierszy);
-
             return tablica;
         }
 

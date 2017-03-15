@@ -15,17 +15,12 @@ namespace ConsoleHost
 
         static void Main(string[] args)
         {
-            var tekst = "BRYLANTY_SĄ_W_MOJEJ_SKRYTCE_W_BANKU";
-            var klucz = "MAROKO";
+            var tekst = "https://www.youtube.com/watch?v=8aMsJWpXyE8";
+            var klucz = "HASLO";
 
-            var zaszyfrowany =  PrzekatnoKolumnowy.Szyfruj(tekst, klucz);
-            
-            Console.WriteLine();
-            Console.WriteLine(tekst);
-            Console.WriteLine(zaszyfrowany);
+            var szyfrowany = PrzekatnoKolumnowy.Szyfruj(tekst, klucz);
 
-            var oryginalnyTekst = PrzekatnoKolumnowy.Odszyfruj(zaszyfrowany, klucz);
-
+            var odszyfrowany = PrzekatnoKolumnowy.Odszyfruj(szyfrowany, klucz);
             Console.ReadLine();
         }
     }
