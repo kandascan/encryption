@@ -29,19 +29,18 @@ namespace Szyfry
                 Console.WriteLine();
             }
         }
+        private static Key[] SortujKluczAscending(string klucz)
+        {
+            var key = klucz.Select((t, i) => new Key { OryginalnyIndex = i, Znak = t }).ToList();
 
+            return key.OrderBy(x => x.Znak).ThenBy(x => x.OryginalnyIndex).ToArray();
+        }
         private static string SzyfrujTekst(char[,] tablica, string klucz, int wiersze)
         {
-            List<Key> key = new List<Key>();
-            for (int i = 0; i < klucz.Length; i++)
-            {
-                key.Add(new Key { OryginalnyIndex = i, Znak = klucz[i] });
-            }
-
-            var sortowaneKlucze = key.OrderBy(x => x.Znak).ThenBy(x => x.OryginalnyIndex).ToArray();
+            var kluczAsc = SortujKluczAscending(klucz);
             var zaszyfrowanyTekst = "";
 
-            foreach (var keySort in sortowaneKlucze)
+            foreach (var keySort in kluczAsc)
             {
                 var kolumna = keySort.OryginalnyIndex;
                 for (int i = 0; i < wiersze; i++)
@@ -65,23 +64,23 @@ namespace Szyfry
             return zaszyfrowanyTekst;
         }
 
-        private static char[,] UtworzTabliceZTekstu(string tekst, int liczbaKolumn, int liczbaWierszy)
+        private static char[,] UtworzTabliceZTekstu(string tekst, int kolumny, int wiersze)
         {
-            var tablica = new char[liczbaWierszy, liczbaKolumn];
-            var licznikPetli = 0;
-            for (int i = 0; i < liczbaWierszy; i++)
+            var tablica = new char[wiersze, kolumny];
+            var licznik = 0;
+            for (int i = 0; i < wiersze; i++)
             {
-                for (int j = 0; j < liczbaKolumn; j++)
+                for (int j = 0; j < kolumny; j++)
                 {
-                    if (licznikPetli >= tekst.Length)
+                    if (licznik >= tekst.Length)
                     {
                         tablica[i, j] = 'X';
                     }
                     else
                     {
-                        tablica[i, j] = tekst[licznikPetli];
+                        tablica[i, j] = tekst[licznik];
                     }
-                    licznikPetli++;
+                    licznik++;
                 }
             }
             return tablica;
@@ -129,65 +128,70 @@ namespace Szyfry
             return tekst;
         }
 
-        private static char[,] WypelnijTabliceDeszyfrujaca(char[,] tablica, string klucz, string tekst, int liczbaWierszy)
+        private static int IndexPoczatkowy(int oryginalnyIndex, int liczbaWierszy, int dlugoscKlucza)
         {
-            List<Key> key = new List<Key>();
-            for (int i = 0; i < klucz.Length; i++)
-            {
-                key.Add(new Key { OryginalnyIndex = i, Znak = klucz[i] });
-            }
+            int index = oryginalnyIndex;
 
-            var sortowaneKlucze = key.OrderByDescending(x => x.Znak).ThenByDescending(x => x.OryginalnyIndex).ToArray();
-            int indexTekstu = tekst.Length;
-            foreach (var keySort in sortowaneKlucze)
+            for (int i = 1; i < liczbaWierszy; i++)
             {
-                int indexPoczatkowy = keySort.OryginalnyIndex;
-
-                for (int i = 1; i < liczbaWierszy; i++)
+                index--;
+                if (index < 0)
                 {
-                    indexPoczatkowy--;
-                    if (indexPoczatkowy < 0)
-                    {
-                        indexPoczatkowy = klucz.Length-1;
-                    }
+                    index = dlugoscKlucza - 1;
                 }
+            }
+            return index;
+        }
 
-                for (int i = liczbaWierszy-1; i >= 0; i--)
+        private static Key[] SortujKluczDescending(string klucz)
+        {
+           var key = klucz.Select((t, i) => new Key {OryginalnyIndex = i, Znak = t}).ToList();
+
+            return key.OrderByDescending(x => x.Znak).ThenByDescending(x => x.OryginalnyIndex).ToArray();
+        } 
+
+        private static char[,] WypelnijTabliceDeszyfrujaca(char[,] tablica, string klucz, string tekst, int wiersze)
+        {
+            var kluczDes = SortujKluczDescending(klucz);
+            int indexTekstu = tekst.Length;
+            foreach (var keySort in kluczDes)
+            {
+                int kolumna = IndexPoczatkowy(keySort.OryginalnyIndex, wiersze, klucz.Length);
+
+                for (int i = wiersze-1; i >= 0; i--)
                 {
                     for (int j = 0; j < klucz.Length; j++)
                     {
-                        if (j == indexPoczatkowy)
+                        if (j == kolumna)
                         {
                             char znak = tekst[indexTekstu-1];
                             tablica[i, j] = znak;
                             indexTekstu--;
-                            indexPoczatkowy++;
-                            if (indexPoczatkowy >= klucz.Length)
+                            kolumna++;
+                            if (kolumna >= klucz.Length)
                             {
-                                indexPoczatkowy = 0;
+                                kolumna = 0;
                             }
                             break;
                         }
                     }
                 }
             }
-            DrukujTablice(tablica,klucz,liczbaWierszy);
+            DrukujTablice(tablica,klucz,wiersze);
             return tablica;
         }
 
-        private static char[,] UtworzTabliceDeszyfrujaca(string klucz, int liczbaWierszy)
+        private static char[,] UtworzTabliceDeszyfrujaca(string klucz, string tekst, int wiersze)
         {
-            var tablica = new char[liczbaWierszy, klucz.Length];
-            return tablica;
+            var tablica = new char[wiersze, klucz.Length];
+            return WypelnijTabliceDeszyfrujaca(tablica, klucz, tekst, wiersze);
         }
 
         public static string Odszyfruj(string tekst, string klucz)
         {
-            var liczbaKolumn = klucz.Length;
-            var liczbaWierszy = ObliczLiczbeWierszy(tekst, klucz);
-            var tablica = UtworzTabliceDeszyfrujaca(klucz, liczbaWierszy);
-            var wypelnionaTablica = WypelnijTabliceDeszyfrujaca(tablica, klucz, tekst, liczbaWierszy);
-            return UtworzTekstZTablicy(wypelnionaTablica, liczbaWierszy, klucz);
+            var wiersze = ObliczLiczbeWierszy(tekst, klucz);
+            var tablica = UtworzTabliceDeszyfrujaca(klucz, tekst, ObliczLiczbeWierszy(tekst, klucz));
+            return UtworzTekstZTablicy(tablica, wiersze, klucz);
         }
     }
 
