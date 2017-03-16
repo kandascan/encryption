@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -43,7 +44,7 @@ namespace Szyfry
         private static char ZwrocZnak(List<char> listaZnakow)
         {
             Random rand = new Random();
-            var index = rand.Next(listaZnakow.Count);
+            var index = rand.Next(0, listaZnakow.Count);
             return listaZnakow[index];
         }
 
@@ -59,6 +60,7 @@ namespace Szyfry
                     if (znak == dic.Key)
                     {
                         zaszyfrowany += ZwrocZnak(dic.Value);
+                        break;
                     }
                 }
             }
