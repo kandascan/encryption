@@ -24,10 +24,14 @@ namespace ConsoleHost
             //Console.WriteLine(odszyfrowany);
             //Console.ReadLine();
 
-            var tekst = "ABC";
-            var zaszyfrowany = Homofoniczny.Szyfruj(tekst);
+            //var tekst = "ABC";
+            //var zaszyfrowany = Homofoniczny.Szyfruj(tekst);
 
-            var odszyfrowany = Homofoniczny.Odszyfruj(zaszyfrowany);
+            //var odszyfrowany = Homofoniczny.Odszyfruj(zaszyfrowany);
+
+            var vernama = Vernama.Szyfruj("COS TU_JEST");
+
+            var tekst = Vernama.Odszyfruj(vernama);
         }
     }
 }

@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinPrzekatnoKolumnowyHost",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinHomofonicznyHost", "WinHomofonicznyHost\WinHomofonicznyHost.csproj", "{5E3B1A12-6FBB-4A31-AD8B-37D728B6BD3D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinVernama", "WinVernama\WinVernama.csproj", "{A327F0D1-A9DC-44DE-A5E0-86C56B309F22}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{5E3B1A12-6FBB-4A31-AD8B-37D728B6BD3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E3B1A12-6FBB-4A31-AD8B-37D728B6BD3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E3B1A12-6FBB-4A31-AD8B-37D728B6BD3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A327F0D1-A9DC-44DE-A5E0-86C56B309F22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A327F0D1-A9DC-44DE-A5E0-86C56B309F22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A327F0D1-A9DC-44DE-A5E0-86C56B309F22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A327F0D1-A9DC-44DE-A5E0-86C56B309F22}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
