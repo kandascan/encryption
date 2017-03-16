@@ -53,7 +53,7 @@ namespace Szyfry
             var dictionary = PobierzSlownik();
             var zaszyfrowany = string.Empty;
 
-            foreach (var znak in text)
+            foreach (var znak in text.ToUpper())
             {
                 foreach (var dic in dictionary)
                 {
