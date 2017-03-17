@@ -20,12 +20,12 @@ namespace WinVernama
 
         private void btnSzyfruj_Click(object sender, EventArgs e)
         {
-            txtZaszyfrowany.Text = Vernama.Szyfruj(txtText.Text);
+            txtZaszyfrowany.Text = Vernama.Szyfruj(txtText.Text, txtKlucz.Text);
         }
 
         private void btnOdszyfruj_Click(object sender, EventArgs e)
         {
-            txtText.Text = Vernama.Odszyfruj(txtZaszyfrowany.Text);
+            txtText.Text = Vernama.Odszyfruj(txtZaszyfrowany.Text, txtKlucz.Text);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Schema;
 using NUnit.Framework;
 
 namespace Szyfry.Tests
@@ -10,20 +11,20 @@ namespace Szyfry.Tests
     [TestFixture]
     class Vernama
     {
-        [TestCase("Ala ma kota")]
-        public void PowinienZaszyfrowacTekst(string text)
+        [TestCase("PLUTON", "MARS")]
+        public void PowinienZaszyfrowacTekst(string text, string klucz)
         {
-            var zaszyfrowany = Szyfry.Vernama.Szyfruj(text);
-            var oczekiwany = "10000011101100110000101000001101101110000101000001101011110111111101001100001";
+            var zaszyfrowany = Szyfry.Vernama.Szyfruj(text, klucz);
+            var oczekiwany = "000111010000110100000111000001110000001000001111";
 
             Assert.AreEqual(oczekiwany, zaszyfrowany);
         }
 
-        [TestCase("10000011101100110000101000001101101110000101000001101011110111111101001100001")]
-        public void PowinienOdszyfrowacTekst(string text)
+        [TestCase("000111010000110100000111000001110000001000001111", "MARS")]
+        public void PowinienOdszyfrowacTekst(string text, string klucz)
         {
-            var odszyfrowany = Szyfry.Vernama.Odszyfruj(text);
-            var oczekiwany = "Ala ma kota";
+            var odszyfrowany = Szyfry.Vernama.Odszyfruj(text, klucz);
+            var oczekiwany = "PLUTON";
 
             Assert.AreEqual(oczekiwany, odszyfrowany);
         }

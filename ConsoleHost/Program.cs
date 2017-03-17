@@ -29,9 +29,9 @@ namespace ConsoleHost
 
             //var odszyfrowany = Homofoniczny.Odszyfruj(zaszyfrowany);
 
-            var vernama = Vernama.Szyfruj("COS TU_JEST");
+            var vernama = Vernama.Szyfruj("J", "MARS");
 
-            var tekst = Vernama.Odszyfruj(vernama);
+            var tekst = Vernama.Odszyfruj(vernama, "MARS");
         }
     }
 }
