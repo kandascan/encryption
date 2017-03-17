@@ -20,12 +20,32 @@ namespace WinVernama
 
         private void btnSzyfruj_Click(object sender, EventArgs e)
         {
-            txtZaszyfrowany.Text = Vernama.Szyfruj(txtText.Text, txtKlucz.Text);
+            try
+            {
+                if (txtKlucz.Text.Length == 0) throw new Exception("Podaj klucz");
+                if (txtText.Text.Length == 0) throw new Exception("Podaj tekst do zaszyfrowania");
+
+                txtZaszyfrowany.Text = Vernama.Szyfruj(txtText.Text, txtKlucz.Text);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void btnOdszyfruj_Click(object sender, EventArgs e)
         {
-            txtText.Text = Vernama.Odszyfruj(txtZaszyfrowany.Text, txtKlucz.Text);
+            try
+            {
+                if (txtKlucz.Text.Length == 0) throw new Exception("Podaj klucz");
+                if (txtZaszyfrowany.Text.Length == 0) throw new Exception("Podaj ciag binarny do odszyfrowania");
+
+                txtText.Text = Vernama.Odszyfruj(txtZaszyfrowany.Text, txtKlucz.Text);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }
